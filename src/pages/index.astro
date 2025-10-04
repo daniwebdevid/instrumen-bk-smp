@@ -1,0 +1,163 @@
+---
+// src/pages/index.astro
+// PENTING: Bootstrap CDN HARUS dimuat di BaseLayout.astro!
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InputIdentitas from '../components/InputIdentitas.astro';
+import LikertTable from '../components/LikertTable.astro';
+import InputJawabanSingkat from '../components/InputJawabanSingkat.astro';
+
+// PENTING: GANTI DENGAN URL GAS ASLI KAMU SETELAH DEPLOY!
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby_uGsE1Qmfri1gGh8j_l3gSIgxKV-Zw5Vr0ZIyGsE8EHi9J-Ho2EWMffbulO1pbPomhQ/exec'; 
+
+// Data Pertanyaan Likert (Q1-Q12) - Digunakan oleh LikertTable.astro
+const likertData = [
+    { soal: "Saya merasa sedih atau cemas tanpa alasan yang jelas", name: "Q1" },
+    { soal: "Saya kesulitan mendendalikan emosi saat marah atau kecewa", name: "Q2" },
+    { soal: "Saya bingung menghadapi perubahan fisik atau emosi dalam diri saya", name: "Q3" },
+    { soal: "Saya merasa tidak percaya diri dalam kegiatan sekolah atau sosial", name: "Q4" },
+    
+    { soal: "Saya pernah mengalami perundungan (Bullying) di sekolah", name: "Q5" },
+    { soal: "Saya pernah menyakiti diri sendiri atau berfikir untuk melakukannya", name: "Q6" },
+    
+    { soal: "Saya merasa tidak punya teman dekat di sekolah", name: "Q7" },
+    { soal: "Saya mengalami masalah dengan anggota keluarga di rumah", name: "Q8" },
+    { soal: "Saya merasa tekanan dari teman sebaya untuk melakukan hal yang tidak saya inginkan", name: "Q9" },
+    
+    { soal: "Saya merasa kesulitan mengatur waktu belajar dan bermain", name: "Q10" },
+    { soal: "Saya merasa takut gagal atau khawatir akan nilai saya", name: "Q11" },
+    
+    { soal: "Saya membutuhkan seseorang untuk diajak berbicara tentang masalah saya", name: "Q12" },
+];
+---
+
+<BaseLayout title="Curhat Santai: Instrumen BK">
+    
+    <div class="container py-4 py-md-5">
+        
+        <div class="card shadow-lg border-0 rounded-4 mb-5">
+            <div class="card-header bg-primary text-white border-0 rounded-top-4 p-4">
+                <h1 class="h4 fw-bold mb-1">Instrumen Konseling BK</h1>
+                <p class="mb-0 small opacity-75">RAHASIA. Jawab jujur, data ini untuk membantu Anda.</p>
+            </div>
+        </div>
+        
+        <form id="bk-form" class="needs-validation" novalidate>
+            
+            <InputIdentitas /> 
+            
+            <section class="mt-5"> <h2 class="fs-5 fw-bold text-primary mb-4 border-start border-4 border-primary ps-3">
+                    1. Skala Kebutuhan Cepat (Q1 - Q12)
+                </h2>
+                <LikertTable questions={likertData} /> 
+            </section>
+
+            <section class="mt-5"> <h2 class="fs-5 fw-bold text-primary mb-4 border-start border-4 border-primary ps-3">
+                    2. Jawaban Singkat (Refleksi Mendalam Q13 - Q24)
+                </h2>
+                
+                <p class="small text-muted mb-4">Tolong berikan jawaban yang spesifik dan jujur. Jawaban Anda sangat membantu Guru BK.</p>
+
+                <InputJawabanSingkat nomor="2.1" soal="Saat ini, sebutkan tiga (3) kata yang paling menggambarkan perasaanmu secara umum." id_name="Q13" placeholder="Contoh: Cemas, Lelah, Baik-baik saja" />
+                <InputJawabanSingkat nomor="2.2" soal="Tuliskan satu hal yang membuat kamu paling sulit mengendalikan emosi saat marah atau kecewa." id_name="Q14" placeholder="Contoh: Merasa tidak didengarkan, Nilai jelek" />
+                <InputJawabanSingkat nomor="2.3" soal="Sebutkan satu perubahan (fisik atau emosi) dalam dirimu yang paling membuat kamu bingung." id_name="Q15" placeholder="Contoh: Saya jadi cepat marah, Berat badan turun drastis" />
+                <InputJawabanSingkat nomor="2.4" soal="Jika kamu bisa mengubah satu hal dari dirimu saat ini, apa itu, dan mengapa?" id_name="Q16" placeholder="Saya ingin lebih percaya diri, agar..." />
+
+                <InputJawabanSingkat nomor="2.5" soal="Masalah terbesar apa yang sedang kamu hadapi dengan teman sebaya atau teman dekatmu?" id_name="Q17" placeholder="Contoh: Saya sering dikucilkan di grup, Sulit mencari teman baru" />
+                <InputJawabanSingkat nomor="2.6" soal="Apa kesulitan spesifikmu saat berkomunikasi atau berinteraksi dengan anggota keluarga di rumah?" id_name="Q18" placeholder="Contoh: Ayah selalu sibuk, Saya takut bicara jujur ke Ibu" />
+                <InputJawabanSingkat nomor="2.7" soal="Tuliskan satu hal di sekolah yang paling sering membuat kamu merasa tertekan." id_name="Q19" placeholder="Contoh: Dikerjai oleh teman sekelas, Tugas MTK yang menumpuk" />
+                <InputJawabanSingkat nomor="2.8" soal="Tuliskan alasan utama mengapa kamu merasa takut gagal atau khawatir berlebihan akan nilai/masa depanmu." id_name="Q20" placeholder="Contoh: Khawatir tidak bisa masuk sekolah favorit, Takut dimarahi orang tua" />
+                
+                <InputJawabanSingkat nomor="2.9" soal="Apa hal spesifik yang kamu harapkan untuk dibicarakan dengan Guru BK?" id_name="Q21" placeholder="Butuh saran manajemen waktu, Mau konsultasi rencana karir" />
+                <InputJawabanSingkat nomor="2.10" soal="Siapa satu orang di sekolah (bukan Guru BK) yang kamu rasa bisa kamu percaya untuk curhat?" id_name="Q22" placeholder="Contoh: Guru Olahraga Pak Budi, Teman di kelas 8A" />
+                <InputJawabanSingkat nomor="2.11" soal="Jika kamu merasa ada potensi bahaya pada dirimu atau temanmu, apa yang akan kamu lakukan selanjutnya?" id_name="Q23" placeholder="Saya akan langsung lapor guru terdekat, Saya akan diam saja" />
+                <InputJawabanSingkat nomor="2.12" soal="Sebutkan satu tindakan nyata yang dapat kamu lakukan minggu ini untuk meningkatkan rasa percaya dirimu." id_name="Q24" placeholder="Mencoba berbicara dengan 1 teman baru, Mencoba menjawab pertanyaan di kelas" />
+            </section>
+            
+            <div class="d-flex justify-content-center pt-4 mb-4">
+                <button type="submit" id="submit-btn" 
+                        class="btn btn-primary btn-sm fw-bold rounded-2 shadow-sm px-1 w-75 w-md-50">
+                    Kirim Jawaban
+                </button>
+            </div>
+            
+            <div id="status-message" class="text-center mt-3 d-none"></div>
+
+        </form>
+        
+    </div>
+
+    <script is:inline>
+        const gasUrl = "{GAS_WEB_APP_URL}";
+        const form = document.getElementById('bk-form');
+        const submitButton = document.getElementById('submit-btn');
+        const statusMessage = document.getElementById('status-message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            // 1. Validasi Bootstrap
+            if (!form.checkValidity()) {
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // 2. Tampilkan Loading State
+            submitButton.disabled = true;
+            submitButton.textContent = 'Data lagi dikirim... Tunggu bentar ya!';
+            statusMessage.textContent = '';
+            statusMessage.classList.add('d-none');
+
+            const data = {};
+            const formData = new FormData(form);
+            
+            // 3. Kumpulkan Data Identitas
+            data.nama = document.getElementById('nama').value;
+            data.kelas = document.getElementById('kelas').value;
+            data.usia = document.getElementById('usia').value;
+            data.jk = formData.get('jk'); 
+
+            // 4. Kumpulkan Skor Likert (Q1 hingga Q12)
+            for (let i = 1; i <= 12; i++) {
+                const qName = `Q${i}`;
+                data[qName] = formData.get(qName); 
+            }
+
+            // 5. Kumpulkan Jawaban Singkat (Q13 hingga Q24)
+            for (let i = 13; i <= 24; i++) {
+                const qName = `Q${i}`;
+                data[qName] = document.getElementById(qName).value; 
+            }
+
+            // 6. Kirim Data ke GAS
+            try {
+                const response = await fetch(gasUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    statusMessage.textContent = 'Yeay! Jawabanmu sukses direkam! Guru BK akan segera cek dan siap bantu kamu.';
+                    statusMessage.className = 'text-center mt-3 p-3 alert alert-success d-block';
+                    form.remove(); 
+                } else {
+                    throw new Error(result.message || 'Server Curhat lagi error nih. Coba lagi ya!');
+                }
+
+            } catch (error) {
+                console.error('Error saat mengirim:', error);
+                statusMessage.textContent = `Waduh, gagal kirim data. Coba refresh terus isi lagi ya. Info error: ${error.message}`;
+                statusMessage.className = 'text-center mt-3 p-3 alert alert-danger d-block';
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Kirim Jawaban (Siap Ditolong!)';
+            }
+        });
+    </script>
+</BaseLayout>

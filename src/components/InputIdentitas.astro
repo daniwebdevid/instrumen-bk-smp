@@ -1,0 +1,72 @@
+---
+// src/components/InputIdentitas.astro (Revisi Font dan Card per Input)
+// Kita asumsikan Bootstrap CDN sudah dimuat di BaseLayout.astro.
+---
+
+<fieldset class="pb-4 border-bottom border-2 mb-4">
+    <legend class="fs-5 fw-bold text-primary mb-4 border-start border-4 border-primary ps-3">
+        0. Data Diri Siswa
+    </legend>
+    
+    <p class="small text-muted mb-4">Informasi ini wajib diisi untuk identifikasi dan pencatatan data.</p>
+
+    <div class="row g-4">
+        
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-3">
+                    <label for="nama" class="form-label fw-semibold text-dark mb-2">Nama Lengkap</label>
+                    <input type="text" id="nama" name="nama" required 
+                            class="form-control bg-light rounded-1 shadow-inner-sm 
+                                    border-primary border-opacity-50 focus-ring focus-ring-primary">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-3">
+                    <label for="kelas" class="form-label fw-semibold text-dark mb-2">Kelas</label>
+                    <select id="kelas" name="kelas" required 
+                             class="form-select bg-light rounded-1 shadow-inner-sm 
+                                    border-primary border-opacity-50 focus-ring focus-ring-primary">
+                        <option value="" disabled selected class="small">Pilih Kelas</option>
+                        <option value="7A">7A</option>
+                        <option value="7B">7B</option>
+                        <option value="8A">8A</option>
+                        <option value="9C">9C</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-3">
+                    <label for="usia" class="form-label fw-semibold text-dark mb-2">Usia (Tahun)</label>
+                    <input type="number" id="usia" name="usia" required min="10" max="20" 
+                            class="form-control bg-light rounded-1 shadow-inner-sm 
+                                    border-primary border-opacity-50 focus-ring focus-ring-primary">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-3">
+                    <label class="form-label fw-semibold text-dark mb-3 d-block">Jenis Kelamin</label>
+                    <div class="d-flex flex-wrap gap-4 pt-1">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jk" id="jk-l" value="Laki-laki" required>
+                            <label class="form-check-label fw-normal small" for="jk-l">Laki-laki</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jk" id="jk-p" value="Perempuan" required>
+                            <label class="form-check-label fw-normal small" for="jk-p">Perempuan</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>

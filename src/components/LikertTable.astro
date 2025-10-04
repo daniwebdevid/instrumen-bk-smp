@@ -1,0 +1,75 @@
+---
+// Anda bisa menambahkan logika Astro/JavaScript di sini jika diperlukan.
+// Peraturan 1: Kita asumsikan Bootstrap CDN sudah dimuat di BaseLayout.astro.
+// Tidak perlu import '../styles/global.css' di sini.
+
+const pertanyaanData = [
+// Personal Well-being & Anxiety
+{ soal: "Saya merasa sedih atau cemas tanpa alasan yang jelas", name: "Q1" },
+{ soal: "Saya kesulitan mendendalikan emosi saat marah atau kecewa", name: "Q2" },
+{ soal: "Saya bingung menghadapi perubahan fisik atau emosi dalam diri saya", name: "Q3" },
+{ soal: "Saya merasa tidak percaya diri dalam kegiatan sekolah atau sosial", name: "Q4" },
+
+// Safety & High-Risk (Penting untuk dianalisis)
+{ soal: "Saya pernah mengalami perundungan (Bullying) di sekolah", name: "Q5" },
+{ soal: "Saya pernah menyakiti diri sendiri atau berfikir untuk melakukannya", name: "Q6" },
+
+// Social & Family Issues
+{ soal: "Saya merasa tidak punya teman dekat di sekolah", name: "Q7" },
+{ soal: "Saya mengalami masalah dengan anggota keluarga di rumah", name: "Q8" },
+{ soal: "Saya merasa tekanan dari teman sebaya untuk melakukan hal yang tidak saya inginkan", name: "Q9" },
+
+// Academic & Future Anxiety
+{ soal: "Saya merasa kesulitan mengatur waktu belajar dan bermain", name: "Q10" },
+{ soal: "Saya merasa takut gagal atau khawatir akan nilai saya", name: "Q11" },
+
+// Need for Help
+{ soal: "Saya membutuhkan seseorang untuk diajak berbicara tentang masalah saya", name: "Q12" },
+];
+---
+
+<div class="card shadow-lg border-0 rounded-3 my-4">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped mb-0">
+            
+            <thead class="bg-light">
+                <tr>
+                    <th scope="col" class="align-middle fw-semibold text-start text-dark py-3 ps-4">Pertanyaan</th>
+                    <th scope="col" class="align-middle fw-semibold text-center text-dark py-3" style="width: 10%;">TP</th>
+                    <th scope="col" class="align-middle fw-semibold text-center text-dark py-3" style="width: 10%;">Jarang</th>
+                    <th scope="col" class="align-middle fw-semibold text-center text-dark py-3" style="width: 10%;">Sering</th>
+                    <th scope="col" class="align-middle fw-semibold text-center text-dark py-3" style="width: 10%;">Selalu</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {pertanyaanData.map((item, index) => (
+                    <tr>
+                        <td class="align-middle text-start py-3 ps-4 fw-medium text-dark">
+                            {index + 1}. {item.soal}
+                        </td>
+                        
+                        {['1', '2', '3', '4'].map((value, scoreIndex) => (
+                            <td class="align-middle text-center py-3">
+                                <div class="form-check d-flex justify-content-center">
+                                    <input 
+                                        type="radio" 
+                                        class="form-check-input" 
+                                        name={item.name} 
+                                        value={value} 
+                                        id={`${item.name}-${value}`}
+                                        required 
+                                        style="transform: scale(1.2);"
+                                    />
+                                    <label class="sr-only visually-hidden" for={`${item.name}-${value}`}>
+                                        {value} untuk pertanyaan {index + 1}
+                                    </label>
+                                </div>
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+</div>

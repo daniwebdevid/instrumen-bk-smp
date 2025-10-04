@@ -1,0 +1,33 @@
+---
+// src/components/InputJawabanSingkat.astro (Revisi Font dan Card per Input)
+
+interface Props {
+    nomor: string;      
+    soal: string;       
+    id_name: string;    
+    placeholder: string; 
+    required?: boolean; 
+}
+
+const { nomor, soal, id_name, placeholder, required = true } = Astro.props;
+---
+
+<div class="card border-0 mb-4 bg-white shadow">
+    <div class="card-body p-4">
+        
+        <label for={id_name} class="form-label fw-semibold text-dark small d-block mb-3">
+            <span class="text-primary me-2 fw-bold">{nomor}.</span> {soal}
+        </label>
+        
+        <input 
+            type="text" 
+            id={id_name} 
+            name={id_name} 
+            placeholder={placeholder}
+            required={required}
+            class="form-control form-control-md rounded-1 shadow-inner-sm 
+                   bg-light border-secondary border-opacity-25 focus-ring focus-ring-primary"
+        />
+        
+    </div>
+</div>
