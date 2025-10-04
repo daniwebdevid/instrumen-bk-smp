@@ -1,0 +1,69 @@
+# .github/workflows/deploy.yml
+
+name: Deploy Astro to GitHub Pages
+
+on:
+  # Jalankan workflow setiap kali ada push ke branch 'main'
+  push:
+    branches: ["main"]
+
+  # Memungkinkan untuk menjalankan workflow secara manual dari tab Actions di GitHub
+  workflow_dispatch:
+
+# Set izin (permissions) yang dibutuhkan oleh workflow ini
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Biarkan satu proses build berjalan pada satu waktu
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  # 1. Job untuk melakukan Build Proyek Astro
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository
+        uses: actions/checkout@v4
+      
+      # Setup environment Node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          
+      - name: Install dependencies
+        run: npm install
+
+      # Menjalankan build Astro (menghasilkan folder 'dist')
+      - name: Build project
+        run: npm run build
+        
+      # Setup GitHub Pages Environment
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      # Upload folder 'dist' sebagai Artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist' # Folder output dari 'npm run build'
+
+  # 2. Job untuk melakukan Deploy ke GitHub Pages
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    # Pastikan Job 'build' selesai sebelum memulai deploy
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
