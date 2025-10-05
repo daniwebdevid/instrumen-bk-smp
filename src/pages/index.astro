@@ -8,7 +8,7 @@ import InputJawabanSingkat from '../components/InputJawabanSingkat.astro';
 // Format harus: https://script.google.com/macros/s/AKfycb.../exec
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby_uGsE1Qmfri1gGh8j_l3gSIgxKV-Zw5Vr0ZIyGsE8EHi9J-Ho2EWMffbulO1pbPomhQ/exec'; 
 
-// Data untuk Tabel Likert (Q1 - Q12) - Tidak perlu diubah, karena LikertTable menerima array
+// Data untuk Tabel Likert (Q1 - Q12)
 const likertData = [
   { id: 'Q1', text: 'Saya merasa khawatir tentang masa depan saya.' },
   { id: 'Q2', text: 'Saya kesulitan fokus saat belajar atau melakukan tugas.' },
@@ -24,7 +24,7 @@ const likertData = [
   { id: 'Q12', text: 'Saya tidak tahu apa yang ingin saya lakukan setelah lulus.' },
 ];
 
-// Data untuk Jawaban Singkat (Q13 - Q24) - Diubah menjadi array objek agar mudah di-loop di HTML
+// Data untuk Jawaban Singkat (Q13 - Q24) - Digunakan untuk looping komponen InputJawabanSingkat
 const essayData = [
     { nomor: '13', id_name: 'Q13', soal: 'Apa hal yang paling membuat kamu cemas atau khawatir saat ini?', placeholder: 'Tuliskan jawabanmu di sini...' },
     { nomor: '14', id_name: 'Q14', soal: 'Tuliskan satu tujuan yang ingin kamu capai di semester ini.', placeholder: 'Tuliskan jawabanmu di sini...' },
@@ -67,7 +67,6 @@ const essayData = [
             Pilih jawaban yang paling sesuai dengan kondisimu dalam 30 hari terakhir. 
             **1: Tidak Pernah, 2: Jarang, 3: Sering, 4: Selalu.**
         </p>
-        {/* LikertTable masih menerima array 'questions' */}
         <LikertTable questions={likertData} /> 
       </div>
 
@@ -76,8 +75,8 @@ const essayData = [
           2. Jawaban Singkat dan Reflektif (Q13 - Q24) <span class="small text-danger fw-normal fw-bold">(Wajib Diisi)</span>
         </h2>
         
-        {/* KRITIS: LOOP untuk memanggil komponen InputJawabanSingkat 12 kali */}
-        {essayData.map((data, index) => (
+        {/* Looping untuk memanggil komponen InputJawabanSingkat 12 kali */}
+        {essayData.map((data) => (
             <InputJawabanSingkat
                 nomor={data.nomor}
                 soal={data.soal}
@@ -109,8 +108,8 @@ const essayData = [
 
   <script is:inline>
     // Pastikan ini adalah URL GAS yang BENAR (sudah di-deploy)
-    const gasUrl = "https://script.google.com/macros/s/AKfycby_uGsE1Qmfri1gGh8j_l3gSIgxKV-Zw5Vr0ZIyGsE8EHi9J-Ho2EWMffbulO1pbPomhQ/exec"; 
-    const form = document.getElementById('bk-form');
+Ho2EWMffbulO1pbPomhQ/exec 
+    const form = document.getElementById('    const gasUrl = "https://script.google.com/macros/s/AKfycby_uGsE1Qmfri1gGh8j_l3gSIgxKV-Zw5Vr0ZIyGsE8EHi9J-bk-form');
     const submitBtn = document.getElementById('submit-btn');
     const btnText = document.getElementById('btn-text');
     const spinner = document.getElementById('spinner');
