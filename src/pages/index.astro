@@ -1,163 +1,190 @@
 ---
-// src/pages/index.astro
-// PENTING: Bootstrap CDN HARUS dimuat di BaseLayout.astro!
-
 import BaseLayout from '../layouts/BaseLayout.astro';
 import InputIdentitas from '../components/InputIdentitas.astro';
 import LikertTable from '../components/LikertTable.astro';
 import InputJawabanSingkat from '../components/InputJawabanSingkat.astro';
 
 // PENTING: GANTI DENGAN URL GAS ASLI KAMU SETELAH DEPLOY!
+// Format harus: https://script.google.com/macros/s/AKfycb.../exec
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby_uGsE1Qmfri1gGh8j_l3gSIgxKV-Zw5Vr0ZIyGsE8EHi9J-Ho2EWMffbulO1pbPomhQ/exec'; 
 
-// Data Pertanyaan Likert (Q1-Q12) - Digunakan oleh LikertTable.astro
+// Data untuk Tabel Likert (Q1 - Q12) - Tidak perlu diubah, karena LikertTable menerima array
 const likertData = [
-    { soal: "Saya merasa sedih atau cemas tanpa alasan yang jelas", name: "Q1" },
-    { soal: "Saya kesulitan mendendalikan emosi saat marah atau kecewa", name: "Q2" },
-    { soal: "Saya bingung menghadapi perubahan fisik atau emosi dalam diri saya", name: "Q3" },
-    { soal: "Saya merasa tidak percaya diri dalam kegiatan sekolah atau sosial", name: "Q4" },
-    
-    { soal: "Saya pernah mengalami perundungan (Bullying) di sekolah", name: "Q5" },
-    { soal: "Saya pernah menyakiti diri sendiri atau berfikir untuk melakukannya", name: "Q6" },
-    
-    { soal: "Saya merasa tidak punya teman dekat di sekolah", name: "Q7" },
-    { soal: "Saya mengalami masalah dengan anggota keluarga di rumah", name: "Q8" },
-    { soal: "Saya merasa tekanan dari teman sebaya untuk melakukan hal yang tidak saya inginkan", name: "Q9" },
-    
-    { soal: "Saya merasa kesulitan mengatur waktu belajar dan bermain", name: "Q10" },
-    { soal: "Saya merasa takut gagal atau khawatir akan nilai saya", name: "Q11" },
-    
-    { soal: "Saya membutuhkan seseorang untuk diajak berbicara tentang masalah saya", name: "Q12" },
+  { id: 'Q1', text: 'Saya merasa khawatir tentang masa depan saya.' },
+  { id: 'Q2', text: 'Saya kesulitan fokus saat belajar atau melakukan tugas.' },
+  { id: 'Q3', text: 'Saya sering merasa sedih tanpa alasan yang jelas.' },
+  { id: 'Q4', text: 'Saya merasa tidak punya teman yang bisa dipercaya.' },
+  { id: 'Q5', text: 'Saya merasa tekanan dari orang tua atau guru untuk berprestasi.' },
+  { id: 'Q6', text: 'Saya merasa takut saat berbicara di depan kelas.' },
+  { id: 'Q7', text: 'Saya kesulitan mengelola waktu antara belajar dan kegiatan lain.' },
+  { id: 'Q8', text: 'Saya pernah ingin bolos atau menghindari sekolah.' },
+  { id: 'Q9', text: 'Saya merasa kurang percaya diri dengan penampilan saya.' },
+  { id: 'Q10', text: 'Saya sering menunda pekerjaan sampai menit terakhir.' },
+  { id: 'Q11', text: 'Saya khawatir tentang konflik atau masalah di rumah.' },
+  { id: 'Q12', text: 'Saya tidak tahu apa yang ingin saya lakukan setelah lulus.' },
 ];
+
+// Data untuk Jawaban Singkat (Q13 - Q24) - Diubah menjadi array objek agar mudah di-loop di HTML
+const essayData = [
+    { nomor: '13', id_name: 'Q13', soal: 'Apa hal yang paling membuat kamu cemas atau khawatir saat ini?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '14', id_name: 'Q14', soal: 'Tuliskan satu tujuan yang ingin kamu capai di semester ini.', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '15', id_name: 'Q15', soal: 'Bagaimana cara kamu menghadapi saat merasa sangat marah atau frustasi?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '16', id_name: 'Q16', soal: 'Siapa orang yang paling kamu percaya di sekolah (selain guru) dan mengapa?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '17', id_name: 'Q17', soal: 'Jelaskan kesulitan terbesar kamu dalam belajar mata pelajaran tertentu.', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '18', id_name: 'Q18', soal: 'Apa kegiatan di luar sekolah (hobi/ekskul) yang paling kamu nikmati?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '19', id_name: 'Q19', soal: 'Bagaimana hubunganmu dengan teman sebaya di kelas?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '20', id_name: 'Q20', soal: 'Apa yang kamu harapkan dari layanan Bimbingan dan Konseling di sekolah?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '21', id_name: 'Q21', soal: 'Apa satu hal yang ingin kamu ubah dari dirimu sendiri?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '22', id_name: 'Q22', soal: 'Apa yang akan kamu lakukan jika kamu melihat temanmu dibully?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '23', id_name: 'Q23', soal: 'Hal apa yang paling kamu syukuri dalam hidupmu saat ini?', placeholder: 'Tuliskan jawabanmu di sini...' },
+    { nomor: '24', id_name: 'Q24', soal: 'Pesan apa yang ingin kamu sampaikan kepada Guru BK-mu?', placeholder: 'Tuliskan jawabanmu di sini...' },
+];
+
 ---
 
-<BaseLayout title="Curhat Santai: Instrumen BK">
+<BaseLayout title="Instrumen Kebutuhan Siswa">
+  <div class="container my-5">
     
-    <div class="container py-4 py-md-5">
+    <header class="text-center mb-5">
+      <h1 class="display-6 fw-bold text-primary">Instrumen Kebutuhan Layanan Siswa</h1>
+      <p class="lead text-muted">Aplikasi ini dirancang untuk memetakan kebutuhan akademik, pribadi, dan sosial siswa untuk layanan Bimbingan dan Konseling.</p>
+    </header>
+
+    <form class="needs-validation" id="bk-form" novalidate>
+      
+      <div class="card shadow-sm mb-5 p-4 border-0">
+        <h2 class="fs-5 fw-bold text-dark mb-4 border-start border-4 border-dark ps-3">
+          0. Data Identitas
+        </h2>
+        <InputIdentitas />
+      </div>
+
+      <div class="card shadow-sm mb-5 p-4 border-0">
+        <h2 class="fs-5 fw-bold text-primary mb-2 border-start border-4 border-primary ps-3">
+            1. Skala Kebutuhan Cepat (Q1 - Q12)
+        </h2>
+        <p class="small text-muted mb-4">
+            Pilih jawaban yang paling sesuai dengan kondisimu dalam 30 hari terakhir. 
+            **1: Tidak Pernah, 2: Jarang, 3: Sering, 4: Selalu.**
+        </p>
+        {/* LikertTable masih menerima array 'questions' */}
+        <LikertTable questions={likertData} /> 
+      </div>
+
+      <div class="card shadow-sm mb-5 p-4 border-0">
+        <h2 class="fs-5 fw-bold text-success mb-4 border-start border-4 border-success ps-3">
+          2. Jawaban Singkat dan Reflektif (Q13 - Q24) <span class="small text-danger fw-normal fw-bold">(Wajib Diisi)</span>
+        </h2>
         
-        <div class="card shadow-lg border-0 rounded-4 mb-5">
-            <div class="card-header bg-primary text-white border-0 rounded-top-4 p-4">
-                <h1 class="h4 fw-bold mb-1">Instrumen Konseling BK</h1>
-                <p class="mb-0 small opacity-75">RAHASIA. Jawab jujur, data ini untuk membantu Anda.</p>
-            </div>
-        </div>
+        {/* KRITIS: LOOP untuk memanggil komponen InputJawabanSingkat 12 kali */}
+        {essayData.map((data, index) => (
+            <InputJawabanSingkat
+                nomor={data.nomor}
+                soal={data.soal}
+                id_name={data.id_name}
+                placeholder={data.placeholder}
+            />
+        ))}
+
+      </div>
+
+      <div class="d-grid gap-2 mb-4">
+        <button class="btn btn-primary btn-lg" type="submit" id="submit-btn">
+          <span id="btn-text">Kirim Jawaban</span>
+          <span id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+        </button>
+      </div>
+
+      <div id="feedback-message" class="alert d-none" role="alert"></div>
+
+      <footer class="mt-5 border-top py-3">
+          <div class="container text-center small text-muted">
+              &copy; {new Date().getFullYear()} Aplikasi instrumen kebutuhan layanan siswa. 
+              Ditenagai oleh Astro & Bootstrap. Dibuat oleh <strong>DanyDev</strong>.
+          </div>
+      </footer>
+
+    </form>
+  </div>
+
+  <script is:inline>
+    // Pastikan ini adalah URL GAS yang BENAR (sudah di-deploy)
+    const gasUrl = "https://script.google.com/macros/s/AKfycby_uGsE1Qmfri1gGh8j_l3gSIgxKV-Zw5Vr0ZIyGsE8EHi9J-Ho2EWMffbulO1pbPomhQ/exec"; 
+    const form = document.getElementById('bk-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const spinner = document.getElementById('spinner');
+    const feedbackMessage = document.getElementById('feedback-message');
+    
+    // Fungsi untuk menampilkan pesan feedback
+    function showFeedback(type, message) {
+        feedbackMessage.classList.remove('d-none', 'alert-success', 'alert-danger');
+        feedbackMessage.classList.add(`alert-${type}`);
+        feedbackMessage.textContent = message;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        <form id="bk-form" class="needs-validation" novalidate>
-            
-            <InputIdentitas /> 
-            
-            <section class="mt-5"> <h2 class="fs-5 fw-bold text-primary mb-4 border-start border-4 border-primary ps-3">
-                    1. Skala Kebutuhan Cepat (Q1 - Q12)
-                </h2>
-                <LikertTable questions={likertData} /> 
-            </section>
+        // Validasi Bootstrap
+        if (!form.checkValidity()) {
+            e.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
 
-            <section class="mt-5"> <h2 class="fs-5 fw-bold text-primary mb-4 border-start border-4 border-primary ps-3">
-                    2. Jawaban Singkat (Refleksi Mendalam Q13 - Q24)
-                </h2>
-                
-                <p class="small text-muted mb-4">Tolong berikan jawaban yang spesifik dan jujur. Jawaban Anda sangat membantu Guru BK.</p>
-
-                <InputJawabanSingkat nomor="2.1" soal="Saat ini, sebutkan tiga (3) kata yang paling menggambarkan perasaanmu secara umum." id_name="Q13" placeholder="Contoh: Cemas, Lelah, Baik-baik saja" />
-                <InputJawabanSingkat nomor="2.2" soal="Tuliskan satu hal yang membuat kamu paling sulit mengendalikan emosi saat marah atau kecewa." id_name="Q14" placeholder="Contoh: Merasa tidak didengarkan, Nilai jelek" />
-                <InputJawabanSingkat nomor="2.3" soal="Sebutkan satu perubahan (fisik atau emosi) dalam dirimu yang paling membuat kamu bingung." id_name="Q15" placeholder="Contoh: Saya jadi cepat marah, Berat badan turun drastis" />
-                <InputJawabanSingkat nomor="2.4" soal="Jika kamu bisa mengubah satu hal dari dirimu saat ini, apa itu, dan mengapa?" id_name="Q16" placeholder="Saya ingin lebih percaya diri, agar..." />
-
-                <InputJawabanSingkat nomor="2.5" soal="Masalah terbesar apa yang sedang kamu hadapi dengan teman sebaya atau teman dekatmu?" id_name="Q17" placeholder="Contoh: Saya sering dikucilkan di grup, Sulit mencari teman baru" />
-                <InputJawabanSingkat nomor="2.6" soal="Apa kesulitan spesifikmu saat berkomunikasi atau berinteraksi dengan anggota keluarga di rumah?" id_name="Q18" placeholder="Contoh: Ayah selalu sibuk, Saya takut bicara jujur ke Ibu" />
-                <InputJawabanSingkat nomor="2.7" soal="Tuliskan satu hal di sekolah yang paling sering membuat kamu merasa tertekan." id_name="Q19" placeholder="Contoh: Dikerjai oleh teman sekelas, Tugas MTK yang menumpuk" />
-                <InputJawabanSingkat nomor="2.8" soal="Tuliskan alasan utama mengapa kamu merasa takut gagal atau khawatir berlebihan akan nilai/masa depanmu." id_name="Q20" placeholder="Contoh: Khawatir tidak bisa masuk sekolah favorit, Takut dimarahi orang tua" />
-                
-                <InputJawabanSingkat nomor="2.9" soal="Apa hal spesifik yang kamu harapkan untuk dibicarakan dengan Guru BK?" id_name="Q21" placeholder="Butuh saran manajemen waktu, Mau konsultasi rencana karir" />
-                <InputJawabanSingkat nomor="2.10" soal="Siapa satu orang di sekolah (bukan Guru BK) yang kamu rasa bisa kamu percaya untuk curhat?" id_name="Q22" placeholder="Contoh: Guru Olahraga Pak Budi, Teman di kelas 8A" />
-                <InputJawabanSingkat nomor="2.11" soal="Jika kamu merasa ada potensi bahaya pada dirimu atau temanmu, apa yang akan kamu lakukan selanjutnya?" id_name="Q23" placeholder="Saya akan langsung lapor guru terdekat, Saya akan diam saja" />
-                <InputJawabanSingkat nomor="2.12" soal="Sebutkan satu tindakan nyata yang dapat kamu lakukan minggu ini untuk meningkatkan rasa percaya dirimu." id_name="Q24" placeholder="Mencoba berbicara dengan 1 teman baru, Mencoba menjawab pertanyaan di kelas" />
-            </section>
-            
-            <div class="d-flex justify-content-center pt-4 mb-4">
-                <button type="submit" id="submit-btn" 
-                        class="btn btn-primary btn-sm fw-bold rounded-2 shadow-sm px-1 w-75 w-md-50">
-                    Kirim Jawaban
-                </button>
-            </div>
-            
-            <div id="status-message" class="text-center mt-3 d-none"></div>
-
-        </form>
+        // Kumpulkan data formulir
+        const formData = {};
+        const elements = form.elements;
+        for (let i = 0; i < elements.length; i++) {
+            const el = elements[i];
+            if (el.name && (el.type !== 'radio' || el.checked) && el.type !== 'submit') {
+                formData[el.name] = el.value;
+            }
+        }
         
-    </div>
+        // Tampilkan spinner dan nonaktifkan tombol
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        spinner.style.display = 'inline-block';
+        feedbackMessage.classList.add('d-none'); // Sembunyikan pesan lama
 
-    <script is:inline>
-        const gasUrl = "https://script.google.com/macros/s/AKfycby_uGsE1Qmfri1gGh8j_l3gSIgxKV-Zw5Vr0ZIyGsE8EHi9J-Ho2EWMffbulO1pbPomhQ/exec";
-        const form = document.getElementById('bk-form');
-        const submitButton = document.getElementById('submit-btn');
-        const statusMessage = document.getElementById('status-message');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault(); 
-            
-            // 1. Validasi Bootstrap
-            if (!form.checkValidity()) {
-                e.stopPropagation();
-                form.classList.add('was-validated');
-                return;
+        try {
+            // --- PERBAIKAN CORS (Mengubah JSON ke URLSearchParams) ---
+            // 1. Konversi objek JSON menjadi URLSearchParams
+            const params = new URLSearchParams();
+            for (const key in formData) {
+                params.append(key, formData[key]); 
             }
 
-            // 2. Tampilkan Loading State
-            submitButton.disabled = true;
-            submitButton.textContent = 'Data lagi dikirim... Tunggu bentar ya!';
-            statusMessage.textContent = '';
-            statusMessage.classList.add('d-none');
+            // 2. Kirim data sebagai string/text, TANPA header JSON
+            const response = await fetch(gasUrl, {
+                method: 'POST',
+                // Hapus headers: {'Content-Type': 'application/json'}
+                body: params.toString() 
+            });
 
-            const data = {};
-            const formData = new FormData(form);
-            
-            // 3. Kumpulkan Data Identitas
-            data.nama = document.getElementById('nama').value;
-            data.kelas = document.getElementById('kelas').value;
-            data.usia = document.getElementById('usia').value;
-            data.jk = formData.get('jk'); 
+            // Pastikan kita bisa membaca respons JSON dari GAS
+            const result = await response.json(); 
 
-            // 4. Kumpulkan Skor Likert (Q1 hingga Q12)
-            for (let i = 1; i <= 12; i++) {
-                const qName = `Q${i}`;
-                data[qName] = formData.get(qName); 
+            if (response.ok && result.status === 'success') {
+                showFeedback('success', result.message || 'Data berhasil dikirim! Terima kasih.');
+                form.reset();
+                form.classList.remove('was-validated'); // Hapus validasi setelah sukses
+            } else {
+                // Tangani respons error dari GAS
+                showFeedback('danger', result.message || 'Gagal mengirim data. Silakan coba lagi.');
             }
 
-            // 5. Kumpulkan Jawaban Singkat (Q13 hingga Q24)
-            for (let i = 13; i <= 24; i++) {
-                const qName = `Q${i}`;
-                data[qName] = document.getElementById(qName).value; 
-            }
-
-            // 6. Kirim Data ke GAS
-            try {
-                const response = await fetch(gasUrl, {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    statusMessage.textContent = 'Yeay! Jawabanmu sukses direkam! Guru BK akan segera cek dan siap bantu kamu.';
-                    statusMessage.className = 'text-center mt-3 p-3 alert alert-success d-block';
-                    form.remove(); 
-                } else {
-                    throw new Error(result.message || 'Server Curhat lagi error nih. Coba lagi ya!');
-                }
-
-            } catch (error) {
-                console.error('Error saat mengirim:', error);
-                statusMessage.textContent = `Waduh, gagal kirim data. Coba refresh terus isi lagi ya. Info error: ${error.message}`;
-                statusMessage.className = 'text-center mt-3 p-3 alert alert-danger d-block';
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Kirim Jawaban (Siap Ditolong!)';
-            }
-        });
-    </script>
+        } catch (error) {
+            console.error("Error saat mengirim:", error);
+            showFeedback('danger', 'Terjadi kesalahan jaringan. Mohon cek URL GAS Anda atau hubungi admin.');
+        } finally {
+            // Aktifkan kembali tombol
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            spinner.style.display = 'none';
+        }
+    });
+</script>
 </BaseLayout>
